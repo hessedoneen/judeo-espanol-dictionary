@@ -67,3 +67,7 @@ blockspring.define(function(request, response) {
 	});
 	
 });
+
+function searchDict(query) {
+    
+}
