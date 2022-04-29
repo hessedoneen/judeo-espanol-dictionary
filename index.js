@@ -9,7 +9,7 @@ function readWordsIntoLocalStorage() {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url);
         xhr.responseType = "blob";
-        xhr.addEventListener('load', function () {
+        xhr.addEventListener("load", function () {
             convertBlob(xhr.response);
         });
         xhr.send();
@@ -23,7 +23,7 @@ function readWordsIntoLocalStorage() {
 
     var GetFileObjectFromURL = function (filePathOrUrl, convertBlob) {
         GetFileBlobUsingURL(filePathOrUrl, function (blob) {
-            convertBlob(blobToFile(blob, 'dictionary.csv'));
+            convertBlob(blobToFile(blob, "dictionary.csv"));
         });
     };
 
@@ -44,14 +44,14 @@ function readWordsIntoLocalStorage() {
 }
 
 function csvToJSONString(csvString) {
-    const lines = csvString.split('\n');
-    const headers = lines[0].split(',');
+    const lines = csvString.split("\n");
+    const headers = lines[0].split(",");
     const data = lines.splice(1);
 
     csvObject = {};
     for (let i = 0; i < data.length; i++) {
         attributes = {};
-        const line = data[i].split(',');
+        const line = data[i].split(",");
         for (let j = 1; j < headers.length; ++j) {
             attributes[headers[j]] = line[j];
         }
@@ -70,13 +70,13 @@ node.addEventListener("keyup", function(event) {
 });
 
 function searchDict(query) {
+    query = query.toLowerCase();
     // Get room data (error check whether the room exists)
-    const words_data_all = JSON.parse(localStorage.getItem('words_data'));
-    console.log(words_data_all)
+    const words_data_all = JSON.parse(localStorage.getItem("words_data"));
     if (!words_data_all.hasOwnProperty(query)) {
         document.getElementById("result-text").innerHTML = "no results";
     }
-    const word_translation = words_data_all[query]['translation'];
+    const word_translation = words_data_all[query]["translation"].replace(";", ", ");
 
     document.getElementById("result-text").innerHTML = word_translation;
 }
