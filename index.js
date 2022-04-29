@@ -1,73 +1,82 @@
-import blockspring from blockspring;
+if (localStorage.getItem("words_data") === null) {
+    readWordsIntoLocalStorage();
+}
 
-blockspring.define(function(request, response) {
-    var min_cost = request.params["min_mana_cost"];
-    var max_cost = request.params["max_mana_cost"];
-    
-    var whereClause = "WHERE K >= " + min_cost + " AND K <= " + max_cost + " ";
-    
-    var card_name = request.params["card_name"];
-    if (card_name) {
-    	whereClause += " AND E MATCHES '(?i).*" + card_name + ".*' ";    
+// Find coordinates in roominfo.csv
+function readWordsIntoLocalStorage() {
+    // Get and read csv file
+    var GetFileBlobUsingURL = function (url, convertBlob) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.responseType = "blob";
+        xhr.addEventListener('load', function () {
+            convertBlob(xhr.response);
+        });
+        xhr.send();
+    };
+
+    var blobToFile = function (blob, name) {
+        blob.lastModifiedDate = new Date();
+        blob.name = name;
+        return blob;
+    };
+
+    var GetFileObjectFromURL = function (filePathOrUrl, convertBlob) {
+        GetFileBlobUsingURL(filePathOrUrl, function (blob) {
+            convertBlob(blobToFile(blob, 'dictionary.csv'));
+        });
+    };
+
+    var FileURL = "dictionary.csv"
+    GetFileObjectFromURL(FileURL, function (fileObject) {
+        // Read the fileObject
+        reader.readAsText(fileObject);
+    });
+
+    // Set up csv file reader
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const csvText = e.target.result;
+
+        // Set all room data in localstorage
+        localStorage.setItem("words_data", csvToJSONString(csvText));
+    };
+}
+
+function csvToJSONString(csvString) {
+    const lines = csvString.split('\n');
+    const headers = lines[0].split(',');
+    const data = lines.splice(1);
+
+    csvObject = {};
+    for (let i = 0; i < data.length; i++) {
+        attributes = {};
+        const line = data[i].split(',');
+        for (let j = 1; j < headers.length; ++j) {
+            attributes[headers[j]] = line[j];
+        }
+        csvObject[line[0]] = attributes;
     }
-    
-    var color = request.params["color"]
-    if (color) {
-    	whereClause += " AND I MATCHES '(?i).*" + color + ".*' ";   
+
+    return JSON.stringify(csvObject);
+}
+
+const node = document.getElementById("search-bar");
+node.addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        console.log(node)
+        searchDict(node.value)
     }
-    
-    var primary_type  = request.params["primary_type"];
-    if (primary_type ) {
-    	whereClause += " AND M MATCHES '(?i).*" + primary_type  + ".*' ";    
-    }
-    
-    var sub_type = request.params["sub_type"];
-    if (sub_type) {
-    	whereClause += " AND N MATCHES '(?i).*" + sub_type + ".*' ";    
-    }
-    
-    var min_power = request.params["min_power"];
-    if (min_power) {
-    	whereClause += " AND O > " + min_power + " ";    
-    }
-    
-    var max_power = request.params["max_power"];
-    if (max_power) {
-    	whereClause += " AND O < " + max_power + " ";    
-    }
-    
-    var min_toughness = request.params["min_toughness"];
-    if (min_toughness) {
-    	whereClause += " AND P > " + min_toughness + " ";    
-    }
-    
-    var max_toughness = request.params["max_toughness"];
-    if (max_toughness) {
-    	whereClause += " AND P < " + max_toughness + " ";    
-    }
-    
-    var rarity = request.params["rarity"];
-    if (rarity) {
-    	whereClause += " AND R CONTAINS '" + rarity + "' ";    
-    }
-    
-    var multiverse_id = request.params["multiverse_id"];
-    if (multiverse_id) {
-    	whereClause += " AND B = " + multiverse_id + " ";    
-    }
-    
-    var query = "SELECT A, B, D, E, F, G, K, I, M, N " + whereClause;
-  
-    blockspring.runParsed("query-google-spreadsheet", { 
-        "query": query,
-        "url": "https://docs.google.com/spreadsheets/d/1F3r0FYuZfpjXM5p4q1p45JzWmczPqAEeN-aTP-FuBXU/edit?usp=sharing" 
-    }, { cache: true, expiry: 7200}, function(res) {
-  		response.addOutput('cards', res.params.data);
-        response.end();
-	});
-	
 });
 
 function searchDict(query) {
-    
+    // Get room data (error check whether the room exists)
+    const words_data_all = JSON.parse(localStorage.getItem('words_data'));
+    console.log(words_data_all)
+    if (!words_data_all.hasOwnProperty(query)) {
+        document.getElementById("result-text").innerHTML = "no results";
+    }
+    const word_translation = words_data_all[query]['translation'];
+
+    document.getElementById("result-text").innerHTML = word_translation;
 }

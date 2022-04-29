@@ -10,33 +10,25 @@
     <link href="index.css" rel="stylesheet">
 
     <!-- JavaScript -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="index.js"></script>
-
-    <script>
-        // our personal assistant function:
-        blockspring.runParsed("personal-assistant-jeannie", {
-          message: "What's the weather like in Antarctica today?"
-        }, function(res) { console.log(res.params["answer"]); })
-    </script>
 </head>
 
 <body>
-    <h1>Judeo Español Dictionary</h1>
-    <form oninput="searchDict()" class="search-form">
-        <input type="text" placeholder="Search" class="search-bar" name="query">
-    </form>
-    <form oninput="result.value=parseInt(a.value)+parseInt(b.value)">
-        <input type="text" id="query" name="query" value="Results in Judeo Español"/>
-        <output name="result" for="a b"></output>
-    </form>
+    <h1>Judeo Español to English Dictionary</h1>
+
+    <div id="search">
+        <input type="text" placeholder="search" id="search-bar" class="search-child" name="query">
+        <div id="search-result" class="search-child">
+            <p id="result-text">result</p>
+        </div>
+    </div>
+
     <p><a href="./dictionary.html">browse dictionary</a></p>
     <p><a href="https://0a43e0c6-2ad4-4afe-924d-703cced439d0.filesusr.com/ugd/0019a0_fbdb6e38aaef4af9977d6b12685edacf.pdf">original pdf</a></p>
-
     <div class="footer">
-        <h5>Güler Orgun, Ricardo Portal, and Antonio Ruiz Tinoco ©2003-2009</h5>
+        <h5>Data by Güler Orgun, Ricardo Portal, and Antonio Ruiz Tinoco ©2003-2009</h5>
     </div>
 </body>
 
 </html>
+
+<script src="./index.js"></script>
