@@ -4,7 +4,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-color: #E6E6E6;
+    background-color: #DED7CC;
     color: #12455E;
     font-family: 'Fredoka', sans-serif;
     height: 100%;
@@ -35,10 +35,14 @@ input {
     border-radius: 20px;
     height: 50px;
     width: 100%;
-    background-color: #8FBDD3;
+    background-color: #5F7385;
     outline: none;
     margin-bottom: 10px;
 }
+
+input::placeholder{
+    color: #12455E;
+  }
 
 #search-result {
     display: flex;
@@ -48,7 +52,7 @@ input {
     text-align: center;
     border-radius: 20px;
     height: 120px;
-    background-color: #8FBDD3;
+    background-color: #5F7385;
     outline: none;
     margin-top: 10px;
 }
